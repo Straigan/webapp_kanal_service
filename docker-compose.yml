@@ -1,0 +1,25 @@
+version: "3.8"
+   
+services:
+    flask_web:
+        container_name: web_kanal_service
+        build: .
+        command: ./run.sh
+        volumes:
+            - .:/usr/src/app
+        ports:
+            - "5000:5000"
+        depends_on:
+            - postgres
+
+    postgres:
+        container_name: db_kanal_service
+        env_file: ./docker/.env-postgresql
+        image: postgres
+        ports:
+          - 32700:5432
+        volumes:
+            - pgdata:/var/lib/postgresql/data/
+
+volumes:
+    pgdata:
