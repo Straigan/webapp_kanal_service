@@ -3,6 +3,7 @@ from flask_migrate import Migrate
 
 from webapp.db import db
 from webapp.kanal_service.views import blueprint as kanal_service
+from webapp.kanal_service.models import Order
 
 
 def create_app():
