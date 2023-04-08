@@ -4,7 +4,7 @@ services:
     flask_web:
         container_name: web_kanal_service
         build: .
-        command: ./run.sh
+        command: ./run_web.sh
         volumes:
             - .:/usr/src/app
         ports:
@@ -20,6 +20,61 @@ services:
           - 32700:5432
         volumes:
             - pgdata:/var/lib/postgresql/data/
+
+    redis:
+        container_name: redis_kanal_service
+        image: redis:latest
+        ports:
+            - "32701:6379"
+    
+    celery_worker:
+        container_name: celery_worker_kanal_service
+        build: .
+        image: celery:latest
+        command:  ./run_celery_worker.sh
+        volumes:
+            - .:/usr/src/app
+        env_file:
+            - .env
+        environment:
+            - FLASK_APP=webapp
+        depends_on:
+            - redis
+            - postgres
+
+    celery_beat:
+        container_name: celery_beat_kanal_service
+        build:
+            context: .
+        image: celery:latest
+        command: ./run_celery_beat.sh
+        volumes:
+            - .:/usr/src/app
+        env_file:
+            - .env
+        environment:
+            - FLASK_APP=webapp
+        depends_on:
+            - redis
+            - postgres
+    
+    flower:
+        container_name: flower_kanal_service
+        build:
+            context: .
+        image: celery:latest
+        command: ./run_flower.sh
+        volumes:
+            - .:/usr/src/app
+        env_file:
+            - .env
+        environment:
+            - FLASK_APP=webapp
+        ports:
+            - 5557:5555
+        depends_on:
+            - redis
+            - postgres
 
 volumes:
     pgdata:
