@@ -1,45 +1,76 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <!-- Page Content-->
-    <div class="container px-4 px-lg-5">
-        <!-- Heading Row-->
-        <div class="row gx-4 gx-lg-5 my-5">
-        </div>
-
-        <!-- Content Row-->
-        <div class="row gx-4 gx-lg-5">
-            <div class="col-md-4 mb-5">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h2 class="card-title">Card One</h2>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
-                    </div>
-                    <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
-                </div>
-            </div>
-            <div class="col-md-8 mb-10">
-                <table class="table table-bordered border-primary">
-                    <thead>
-                        <tr>
-                            <th scope="col">Заказ №</th>
-                            <th scope="col">Стоимость, $</th>
-                            <th scope="col">Стоимость, Р</th>
-                            <th scope="col">Срок поставки</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for order in orders %}
-                            <tr>
-                                <td>{{ order.number_order }}</td>
-                                <td>{{ order.price_in_dollar }}</td>
-                                <td>{{ order.price_in_ruble }}</td>
-                                <td>{{ order.date_of_delivery }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<div class="container-fluid" style="padding:50px">
+  <div class="row">
+        <canvas class="my-4" id="myChart" style="max-width: 1000px; max-height: 600px;"></canvas>
+        <div class="col-lg-4">
+          <table class="table table-bordered border-primary">
+              <thead>
+                  <tr>
+                      <th scope="col">Заказ №</th>
+                      <th scope="col">Стоимость, $</th>
+                      <th scope="col">Стоимость, Р</th>
+                      <th scope="col">Срок поставки</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for order in orders %}
+                      <tr>
+                          <td>{{ order.number_order }}</td>
+                          <td>{{ order.price_in_dollar }}</td>
+                          <td>{{ order.price_in_ruble }}</td>
+                          <td>{{ order.date_of_delivery }}</td>
+                      </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      </div>
     </div>
+  
+   <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+      feather.replace()
+    </script>
+
+    <!-- Graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.7.1/dist/Chart.min.js"></script>
+    <script>
+      var ctx = document.getElementById("myChart");
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: {{ labels | tojson }},
+          datasets: [{
+            data: {{ data | tojson }},
+            lineTension: 0,
+            backgroundColor: 'transparent',
+            borderColor: '#007bff',
+            borderWidth: 4,
+            pointBackgroundColor: '#007bff'
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: false
+              }
+            }]
+          },
+          legend: {
+            display: false,
+          }
+        }
+      });
+    </script>
 {% endblock %}
