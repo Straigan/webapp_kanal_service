@@ -6,7 +6,6 @@ from celery.schedules import crontab
 load_dotenv()
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-TIMEZONE='Europe/Yekaterinburg'
 SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SCOPES = [os.environ['SCOPES']]
