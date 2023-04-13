@@ -16,9 +16,9 @@
 ## Запуск приложения на ОС Linux:
 Выполните в консоли:
 
-git clone https://github.com/Straigan/kitchen_recipes_flask.git 
-docker-compose up 
-docker exec -it web_kanal_service python3 create_db.py 
+git clone https://github.com/Straigan/kitchen_recipes_flask.git  
+docker-compose up  
+docker exec -it web_kanal_service python3 create_db.py  
 
 # Настройка
 
