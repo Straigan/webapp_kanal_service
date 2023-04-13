@@ -13,12 +13,14 @@
 
 # Сборка репозитория и локальный запуск
 
+## Запуск приложения на ОС Linux:
 Выполните в консоли:
 
 git clone https://github.com/Straigan/kitchen_recipes_flask.git
 docker-compose up
+docker exec -it web_kanal_service python3 create_db.py
 
 # Настройка
 
 Для работы с Google Sheets, через Google API. Не обходимо создать в папке webapp credentials.json с помощью Apis & Services.
-А так же указать необходимы данные в config.py файле.
+
