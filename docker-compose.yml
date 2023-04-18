@@ -16,17 +16,23 @@ services:
         container_name: db_kanal_service
         env_file: ./docker/.env-postgresql
         image: postgres
+        environment:
+            TZ: 'Asia/Yekaterinburg'
+            PGTZ: 'Asia/Yekaterinburg'
         ports:
           - 32700:5432
         volumes:
             - pgdata:/var/lib/postgresql/data/
+            - /etc/localtime:/etc/localtime:ro
 
     redis:
         container_name: redis_kanal_service
         image: redis:latest
+        environment:
+            TZ: 'Asia/Yekaterinburg'
         ports:
             - "32701:6379"
-    
+
     celery_worker:
         container_name: celery_worker_kanal_service
         build: .
