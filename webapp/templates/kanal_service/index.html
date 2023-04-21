@@ -1,11 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container-fluid" style="padding:50px">
+<div class="container-fluid content">
   <div class="row">
-        <canvas class="my-4" id="myChart" style="max-width: 1000px; max-height: 600px;"></canvas>
+        <canvas class="my-4 graf_canvas" id="myChart"></canvas>
         <div class="col-lg-4">
-          <table class="table table-bordered border-primary">
+          <table class="table table-bordered border-primary total_price_table">
+            <thead class="total_price_thead">
+              <tr>
+                <th scope="col" class="total_price_th">Total, $</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="total_price_td">{{ total_sum_dollar }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="table table-bordered border-primary table_orders">
               <thead>
                   <tr>
                       <th scope="col">Заказ №</th>

@@ -1,0 +1,31 @@
+.total_price_table {
+    text-align: center;
+    width: 40%;
+    margin: auto;
+}
+
+.total_price_thead {
+    background-color: black;
+    color: white;
+}
+
+.total_price_th {
+    font-size: 200%;
+}
+
+.total_price_td {
+    font-size: 400%;
+}
+
+.table_orders {
+    margin: 10%;
+}
+
+.graf_canvas {
+    max-width: 1000px;
+    max-height: 600px;
+}
+
+.content {
+    padding:50px;
+}
