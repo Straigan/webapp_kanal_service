@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template
-from pandas import to_datetime
 
 from webapp.kanal_service.models import Order
 

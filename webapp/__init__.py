@@ -7,13 +7,16 @@ from webapp.celery_app import celery_init_app
 
 
 def create_webapp():
-    app = Flask(__name__)
-    app.config.from_pyfile('config.py')
-    app.register_blueprint(kanal_service)
-    db.init_app(app)
-    Migrate(app, db)
-    celery_init_app(app)
-    return app
+    webapp = Flask(__name__)
+    webapp.config.from_pyfile('config.py')
+    webapp.register_blueprint(kanal_service)
+    db.init_app(webapp)
+    from webapp.kanal_service import models
+    with webapp.app_context():
+        db.create_all()
+    Migrate(webapp, db)
+    celery_init_app(webapp)
+    return webapp
 
 
 

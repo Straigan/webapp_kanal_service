@@ -129,3 +129,4 @@ dmypy.json
 
 credentials.json
 .flaskenv
+.env
