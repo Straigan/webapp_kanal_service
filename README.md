@@ -16,7 +16,7 @@
 ## Запуск приложения на ОС Linux:
 Выполните в консоли:
 
-git clone https://github.com/Straigan/kitchen_recipes_flask.git  
+git clone https://github.com/Straigan/webapp_kanal_service.git  
 docker-compose up  
 
 # Настройка
