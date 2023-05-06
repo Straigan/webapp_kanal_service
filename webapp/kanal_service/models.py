@@ -10,6 +10,7 @@ class Order(db.Model):
     price_in_dollar = db.Column(db.Integer)
     price_in_ruble = db.Column(db.Float)
     date_of_delivery = db.Column(db.String(10))
+    hash_line = db.Column(db.BigInteger)
     creation_datetime = db.Column(db.DateTime, default=datetime.now())
 
     def __repr__(self):
