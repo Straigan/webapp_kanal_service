@@ -1,0 +1,13 @@
+import requests
+
+from webapp.config import TOKEN_TELEGRAM, CHAT_ID_TELEGRAM
+
+
+def messege_delete_order_in_db(number_order, date_order):
+    message = f'Заказ нормер {number_order} удален, срок доставки {date_order} - прошел.'
+    post_massage_telegram_bot(message)
+
+
+def post_massage_telegram_bot(message):
+    url = f"https://api.telegram.org/bot{TOKEN_TELEGRAM}/sendMessage?chat_id={CHAT_ID_TELEGRAM}&text={message}"
+    print(requests.get(url).json())

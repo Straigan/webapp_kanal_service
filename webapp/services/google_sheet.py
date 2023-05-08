@@ -6,6 +6,7 @@ from google.oauth2 import service_account
 from webapp.config import SERVICE_ACCOUNT_FILE, SCOPES, SAMPLE_RANGE_NAME, SAMPLE_SPREADSHEET_ID
 from webapp.db import db
 from webapp.kanal_service.models import Order
+from webapp.services.telegram import messege_delete_order_in_db
 
 
 def get_google_sheets_data():
@@ -29,8 +30,8 @@ def get_kurs_dollara():
 
 def delete_order_in_db():
     'Если номера заказа из БД нет в списке номеров заказов из гугл таблице, то заказ удаляется из БД'
-    query_orders = Order.query.all()
-    numbers_orders_data_db = tuple((order.number_order for order in query_orders))
+    orders = Order.query.all()
+    numbers_orders_data_db = tuple((order.number_order for order in orders))
     numbers_orders_data_google_sheets = tuple((int(order[1]) for order in get_google_sheets_data()))
 
     for number_order_db in numbers_orders_data_db:
@@ -43,8 +44,8 @@ def delete_order_in_db():
 def add_order_in_db():
     'Если номера заказа из гугл таблицы нет в БД, то строка номера заказа добавляется в БД'
 
-    query_orders = Order.query.all()
-    numbers_orders_data_db = tuple((order.number_order for order in query_orders))
+    orders = Order.query.all()
+    numbers_orders_data_db = tuple((order.number_order for order in orders))
     data_google_sheets = tuple((data_sheet for data_sheet in get_google_sheets_data()))
 
     for order_google_sheets in data_google_sheets:
@@ -70,8 +71,8 @@ def change_order_data_in_db():
     Если хеш заказа из гугул таблици не совпадает с хешом заказа из ДБ, то проиходит обновление данных
     в таблице с созданием нового хеша.
     """
-    query_orders = Order.query.all()
-    numbers_orders_data_db = tuple((order.hash_line for order in query_orders))
+    orders = Order.query.all()
+    numbers_orders_data_db = tuple((order.hash_line for order in orders))
     data_google_sheets = tuple((data_sheet for data_sheet in get_google_sheets_data()))
     
     for order_google_sheets in data_google_sheets:
@@ -89,3 +90,16 @@ def change_order_data_in_db():
             change_order.hash_line = hash((order_google_sheets[2], order_google_sheets[3]))
         
     db.session.commit()
+
+
+def check_orders_date_delivery():
+    orders = Order.query.all()
+    current_date = datetime.now().date()
+    for order in orders:
+        date_order = datetime.strptime(order.date_of_delivery, '%d.%m.%Y').date()
+        if date_order < current_date:
+            messege_delete_order_in_db(order.number_order, order.date_of_delivery)
+            db.session.delete(order)
+    
+    db.session.commit()
+

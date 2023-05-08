@@ -19,3 +19,4 @@ def index():
                     data=data, 
                     total_sum_dollar=total_sum_dollar
                 )
+
