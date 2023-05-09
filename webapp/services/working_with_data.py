@@ -1,12 +1,12 @@
-import requests
 from datetime import datetime
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
+import requests
 
 from webapp.config import SERVICE_ACCOUNT_FILE, SCOPES, SAMPLE_RANGE_NAME, SAMPLE_SPREADSHEET_ID
 from webapp.db import db
 from webapp.kanal_service.models import Order
-from webapp.services.telegram import messege_delete_order_in_db
+from webapp.services.telegram import messege_old_date_order_in_db
 
 
 def get_google_sheets_data():
@@ -29,7 +29,7 @@ def get_kurs_dollara():
 
 
 def delete_order_in_db():
-    'Если номера заказа из БД нет в списке номеров заказов из гугл таблице, то заказ удаляется из БД'
+    """Если номера заказа из БД нет в списке номеров заказов из гугл таблице, то заказ удаляется из БД"""
     orders = Order.query.all()
     numbers_orders_data_db = tuple((order.number_order for order in orders))
     numbers_orders_data_google_sheets = tuple((int(order[1]) for order in get_google_sheets_data()))
@@ -42,7 +42,7 @@ def delete_order_in_db():
 
 
 def add_order_in_db():
-    'Если номера заказа из гугл таблицы нет в БД, то строка номера заказа добавляется в БД'
+    """Если номера заказа из гугл таблицы нет в БД, то строка номера заказа добавляется в БД"""
 
     orders = Order.query.all()
     numbers_orders_data_db = tuple((order.number_order for order in orders))
@@ -88,18 +88,18 @@ def change_order_data_in_db():
             change_order.price_in_ruble = round(price_in_ruble, 2),
             change_order.date_of_delivery = order_google_sheets[3],
             change_order.hash_line = hash((order_google_sheets[2], order_google_sheets[3]))
-        
     db.session.commit()
 
 
 def check_orders_date_delivery():
+    """
+    Проверка даты доставки заказа, если дата текущего дня юольше даты заказа,
+    то отпправляется сообщение на телеграмм, о том что дата прошла
+    """
     orders = Order.query.all()
     current_date = datetime.now().date()
     for order in orders:
         date_order = datetime.strptime(order.date_of_delivery, '%d.%m.%Y').date()
         if date_order < current_date:
-            messege_delete_order_in_db(order.number_order, order.date_of_delivery)
-            db.session.delete(order)
-    
+            messege_old_date_order_in_db(order.number_order, order.date_of_delivery)
     db.session.commit()
-
