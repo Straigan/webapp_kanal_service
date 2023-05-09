@@ -7,7 +7,7 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     number_str = db.Column(db.Integer)
     number_order = db.Column(db.Integer, unique=True)
-    price_in_dollar = db.Column(db.Integer)
+    price_in_dollar = db.Column(db.Float)
     price_in_ruble = db.Column(db.Float)
     date_of_delivery = db.Column(db.String(10))
     hash_line = db.Column(db.BigInteger)
