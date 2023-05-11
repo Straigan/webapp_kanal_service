@@ -25,7 +25,10 @@ def get_google_sheets_data():
 
 def get_kurs_dollara():
     """Функция получает данные по дорллару из ЦБ РФ по API"""
-    return requests.get('https://www.cbr-xml-daily.ru/daily_json.js').json()
+    try:
+        return requests.get('https://www.cbr-xццml-daily.ru/daily_json.js').json()
+    except:
+        return False
 
 
 def delete_order_in_db():
@@ -79,15 +82,18 @@ def change_order_data_in_db():
         order_google_sheets_str_to_int = int(order_google_sheets[1])
         hash_order_in_google_table = hash((order_google_sheets[2], order_google_sheets[3]))
         if hash_order_in_google_table not in numbers_orders_data_db:
-            kurs_dollar_cb_rf = get_kurs_dollara()
-            price_in_ruble = order_google_sheets_str_to_int * kurs_dollar_cb_rf['Valute']['USD']['Value']
-            number_order = order_google_sheets_str_to_int
-            change_order = Order.query.filter(number_order==number_order).first()
-            change_order.number_str = order_google_sheets[0],
-            change_order.price_in_dollar = order_google_sheets[2],
-            change_order.price_in_ruble = round(price_in_ruble, 2),
-            change_order.date_of_delivery = order_google_sheets[3],
-            change_order.hash_line = hash((order_google_sheets[2], order_google_sheets[3]))
+            if get_kurs_dollara():
+                kurs_dollar_cb_rf = get_kurs_dollara()
+                price_in_ruble = order_google_sheets_str_to_int * kurs_dollar_cb_rf['Valute']['USD']['Value']
+                number_order = order_google_sheets_str_to_int
+                change_order = Order.query.filter(number_order==number_order).first()
+                change_order.number_str = order_google_sheets[0],
+                change_order.price_in_dollar = order_google_sheets[2],
+                change_order.price_in_ruble = round(price_in_ruble, 2),
+                change_order.date_of_delivery = order_google_sheets[3],
+                change_order.hash_line = hash((order_google_sheets[2], order_google_sheets[3]))
+            else:
+                return print('Сайт ЦБ РФ недоступен')
     db.session.commit()
 
 
