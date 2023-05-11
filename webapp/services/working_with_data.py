@@ -26,7 +26,7 @@ def get_google_sheets_data():
 def get_kurs_dollara():
     """Функция получает данные по дорллару из ЦБ РФ по API"""
     try:
-        return requests.get('https://www.cbr-xццml-daily.ru/daily_json.js').json()
+        return requests.get('https://www.cbr-xml-daily.ru/daily_json.js').json()
     except:
         return False
 
