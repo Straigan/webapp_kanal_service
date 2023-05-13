@@ -1,2 +1,2 @@
 #!/bin/sh
-flask run
+export FLASK_DEBUG=False && flask run
